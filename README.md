@@ -50,7 +50,7 @@ R-build provides an `Renv-install` command that shortens this to:
 #### 20120106
 
 * Began fork from [ruby-build](https://github.com/sstephenson/ruby-build)
-* Added definitions for 2.14.0 and 2.14.1.
+* Added definitions for the R-2 series
 
 ### License
 
