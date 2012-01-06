@@ -57,6 +57,7 @@ R-build provides an `Renv-install` command that shortens this to:
 (The MIT License)
 
 Copyright (c) 2011 Sam Stephenson
+
 Copyright (c) 2012 Vanderbilt University
 
 Permission is hereby granted, free of charge, to any person obtaining
