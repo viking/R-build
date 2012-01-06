@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-RUBY_BUILD_VERSION="20111230"
+R_BUILD_VERSION="20120106"
 
 set -E
 exec 3<&2 # preserve original stderr at fd 3
@@ -58,10 +58,6 @@ install_package() {
   install_package_using "tarball" 1 $*
 }
 
-install_git() {
-  install_package_using "git" 2 $*
-}
-
 install_package_using() {
   local package_type="$1"
   local package_type_nargs="$2"
@@ -85,7 +81,6 @@ make_package() {
   before_install_package "$package_name"
   build_package "$package_name" $*
   after_install_package "$package_name"
-  fix_directory_permissions
   popd >&4
 }
 
@@ -96,16 +91,6 @@ fetch_tarball() {
   echo "Downloading ${package_url}..." >&2
   { curl "$package_url" > "${package_name}.tar.gz"
     tar xzvf "${package_name}.tar.gz"
-  } >&4 2>&1
-}
-
-fetch_git() {
-  local package_name="$1"
-  local git_url="$2"
-  local git_ref="$3"
-
-  echo "Cloning ${git_url}..." >&2
-  { git clone --depth 1 --branch "$git_ref" "$git_url" "${package_name}"
   } >&4 2>&1
 }
 
@@ -146,84 +131,12 @@ build_package_autoconf() {
   } >&4 2>&1
 }
 
-build_package_ruby() {
-  local package_name="$1"
-
-  { "$RUBY_BIN" setup.rb
-  } >&4 2>&1
-}
-
-build_package_ree_installer() {
-  local options=""
-  if [[ "Darwin" = "$(uname)" ]]; then
-    options="--no-tcmalloc"
-  fi
-
-  # Work around install_useful_libraries crash with --dont-install-useful-gems
-  mkdir -p "$PREFIX_PATH/lib/ruby/gems/1.8/gems"
-
-  { ./installer --auto "$PREFIX_PATH" --dont-install-useful-gems $options $CONFIGURE_OPTS
-  } >&4 2>&1
-}
-
-build_package_rbx() {
-  local package_name="$1"
-
-  { ./configure --prefix="$PREFIX_PATH" --gemsdir="$PREFIX_PATH"
-    rake install
-  } >&4 2>&1
-}
-
-build_package_maglev() {
-  build_package_copy
-
-  { cd "${PREFIX_PATH}"
-    ./install.sh
-    cd "${PREFIX_PATH}/bin"
-    echo "Creating symlink for ruby*"
-    ln -fs maglev-ruby ruby
-    echo "Creating symlink for irb*"
-    ln -fs maglev-irb irb
-  } >&4 2>&1
-  echo
-  echo "Run 'maglev start' to start up the stone before using 'ruby' or 'irb'"
-}
-
-build_package_jruby() {
-  build_package_copy
-  cd "${PREFIX_PATH}/bin"
-  ln -fs jruby ruby
-  install_jruby_launcher
-  remove_windows_files
-}
-
-install_jruby_launcher() {
-  cd "${PREFIX_PATH}/bin"
-  { ./ruby gem install jruby-launcher
-  } >&4 2>&1
-}
-
-remove_windows_files() {
-  cd "$PREFIX_PATH"
-  rm -f bin/*.exe bin/*.dll bin/*.bat bin/jruby.sh
-}
-
-build_package_copy() {
-  mkdir -p "$PREFIX_PATH"
-  cp -R . "$PREFIX_PATH"
-}
-
 before_install_package() {
   local stub=1
 }
 
 after_install_package() {
   local stub=1
-}
-
-fix_directory_permissions() {
-  # Ensure installed directories are not world-writable to avoid Bundler warnings
-  find "$PREFIX_PATH" -type d -exec chmod go-w {} \;
 }
 
 require_gcc() {
@@ -299,13 +212,13 @@ verify_gcc() {
 }
 
 version() {
-  echo "ruby-build ${RUBY_BUILD_VERSION}"
+  echo "R-build ${R_BUILD_VERSION}"
 }
 
 usage() {
   { version
-    echo "usage: ruby-build [-v|--verbose] definition prefix"
-    echo "       ruby-build --definitions"
+    echo "usage: R-build [-v|--verbose] definition prefix"
+    echo "       R-build --definitions"
   } >&2
 
   if [ -z "$1" ]; then
@@ -314,7 +227,7 @@ usage() {
 }
 
 list_definitions() {
-  { for definition in "${RUBY_BUILD_ROOT}/share/ruby-build/"*; do
+  { for definition in "${R_BUILD_ROOT}/share/R-build/"*; do
       echo "${definition##*/}"
     done
   } | sort
@@ -323,7 +236,7 @@ list_definitions() {
 
 
 unset VERBOSE
-RUBY_BUILD_ROOT="$(abs_dirname "$0")/.."
+R_BUILD_ROOT="$(abs_dirname "$0")/.."
 
 case "$1" in
 "-h" | "--help" )
@@ -354,11 +267,11 @@ DEFINITION_PATH="$1"
 if [ -z "$DEFINITION_PATH" ]; then
   usage
 elif [ ! -e "$DEFINITION_PATH" ]; then
-  BUILTIN_DEFINITION_PATH="${RUBY_BUILD_ROOT}/share/ruby-build/${DEFINITION_PATH}"
+  BUILTIN_DEFINITION_PATH="${R_BUILD_ROOT}/share/R-build/${DEFINITION_PATH}"
   if [ -e "$BUILTIN_DEFINITION_PATH" ]; then
     DEFINITION_PATH="$BUILTIN_DEFINITION_PATH"
   else
-    echo "ruby-build: definition not found: ${DEFINITION_PATH}" >&2
+    echo "R-build: definition not found: ${DEFINITION_PATH}" >&2
     exit 1
   fi
 fi
@@ -375,9 +288,8 @@ else
 fi
 
 SEED="$(date "+%Y%m%d%H%M%S").$$"
-LOG_PATH="${TMP}/ruby-build.${SEED}.log"
-TEMP_PATH="${TMP}/ruby-build.${SEED}"
-RUBY_BIN="${PREFIX_PATH}/bin/ruby"
+LOG_PATH="${TMP}/R-build.${SEED}.log"
+TEMP_PATH="${TMP}/R-build.${SEED}"
 CWD="$(pwd)"
 
 exec 4<> "$LOG_PATH" # open the log file at fd 4
@@ -388,9 +300,6 @@ fi
 
 export LDFLAGS="-L'${PREFIX_PATH}/lib' ${LDFLAGS}"
 export CPPFLAGS="-I'${PREFIX_PATH}/include' ${CPPFLAGS}"
-
-unset RUBYOPT
-unset RUBYLIB
 
 trap build_failed ERR
 mkdir -p "$TEMP_PATH"

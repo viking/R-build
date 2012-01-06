@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$RENV_DEBUG" ] && set -x
+
+# Provide Renv completions
+if [ "$1" = "--complete" ]; then
+  exec R-build --definitions
+fi
+
+if [ -z "$RENV_ROOT" ]; then
+  RENV_ROOT="${HOME}/.Renv"
+fi
+
+DEFINITION="$1"
+case "$DEFINITION" in
+"" | -* )
+  { echo "usage: Renv install VERSION"
+    echo "       Renv install /path/to/definition"
+    echo
+    echo "Available versions:"
+    R-build --definitions | sed 's/^/  /'
+    echo
+  } >&2
+  exit 1
+  ;;
+esac
+
+VERSION_NAME="${DEFINITION##*/}"
+PREFIX="${RENV_ROOT}/versions/${VERSION_NAME}"
+
+R-build "$DEFINITION" "$PREFIX"
+Renv rehash
