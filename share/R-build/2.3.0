@@ -1,0 +1,2 @@
+require_gcc
+install_package "R-2.3.0" "http://cran.r-project.org/src/base/R-2/R-2.3.0.tar.gz"
