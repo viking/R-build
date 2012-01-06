@@ -300,6 +300,7 @@ fi
 
 export LDFLAGS="-L'${PREFIX_PATH}/lib' ${LDFLAGS}"
 export CPPFLAGS="-I'${PREFIX_PATH}/include' ${CPPFLAGS}"
+CONFIGURE_ARGS="--enable-R-shlib ${CONFIGURE_ARGS}"
 
 trap build_failed ERR
 mkdir -p "$TEMP_PATH"

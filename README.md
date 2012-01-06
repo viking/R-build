@@ -1,109 +1,63 @@
-# ruby-build
+# R-build
 
-ruby-build provides a simple way to compile and install different
-versions of Ruby on UNIX-like systems.
+R-build provides a simple way to compile and install different
+versions of R on UNIX-like systems.
 
-### Installing ruby-build
+### Installing R-build
 
-    $ git clone git://github.com/sstephenson/ruby-build.git
-    $ cd ruby-build
+    $ git clone git://github.com/viking/R-build.git
+    $ cd R-build
     $ ./install.sh
 
-This will install ruby-build into `/usr/local`. If you do not have
+This will install R-build into `/usr/local`. If you do not have
 write permission to `/usr/local`, you will need to run `sudo
 ./install.sh` instead. You can install to a different prefix by
 setting the `PREFIX` environment variable.
 
-### Installing Ruby
+### Installing R
 
-To install a Ruby version, run the `ruby-build` command with the path
+To install an R version, run the `R-build` command with the path
 to a definition file and the path where you want to install it. (A
 number of [built-in
-definitions](https://github.com/sstephenson/ruby-build/tree/master/share/ruby-build)
+definitions](https://github.com/viking/R-build/tree/R-build/share/R-build)
 may be specified instead.)
 
-    $ ruby-build 1.9.2-p290 ~/local/ruby-1.9.2-p290
+    $ R-build 2.14.0 ~/local/R-2.14.0
     ...
-    $ ~/local/ruby-1.9.2-p290/bin/ruby --version
-    ruby 1.9.2p290 (2011-07-09 revision 32553) [x86_64-darwin11.0.0]
+    $ ~/local/R-2.14.0/bin/R --version
+    R version 2.14.0 (2011-10-31)
+    Copyright (C) 2011 The R Foundation for Statistical Computing
+    ISBN 3-900051-07-0
+    Platform: x86_64-unknown-linux-gnu (64-bit)
 
-You can use it with [rbenv](https://github.com/sstephenson/rbenv):
+    R is free software and comes with ABSOLUTELY NO WARRANTY.
+    You are welcome to redistribute it under the terms of the
+    GNU General Public License version 2.
+    For more information about these matters see
+    http://www.gnu.org/licenses/.
 
-    $ ruby-build 1.9.2-p290 ~/.rbenv/versions/1.9.2-p290
 
-ruby-build provides an `rbenv-install` command that shortens this to:
+You can use it with [Renv](https://github.com/viking/Renv):
 
-    $ rbenv install 1.9.2-p290
+    $ R-build 2.14.0 ~/.rbenv/versions/2.14.0
+
+R-build provides an `Renv-install` command that shortens this to:
+
+    $ Renv install 2.14.0
 
 ### Version History
 
-#### 20111230
+#### 20120106
 
-* Added a definition for MagLev 1.0.0.
-* Added support for overriding `make` options with the
-  `$MAKEOPTS`/`$MAKE_OPTS` environment variable.
-* Removed RubyGems installations from JRuby definitions in favor of
-  the bundled RubyGems versions.
-* Added a `before_install_package` hook.
-* Added definitions for REE 1.8.7-2009.09 and 1.8.7-2010.01.
-* Added definitions for Ruby 1.8.6-p383, 1.8.7-p302 and 1.8.7-p357.
-* Updated the JRuby 1.7.0-dev snapshot URL.
-* Changed the GCC detector to look for `gcc-*` anywhere in the
-  `$PATH`, not just `/usr/bin`.
-
-#### 20111030
-
-* Added a Ruby 1.8.7-p334 definition.
-* Renamed the 1.9.4-dev definition to 2.0.0-dev to reflect the new
-  version numbering scheme.
-* ruby-build now automatically displays the last 10 lines of the error
-  log, if any, when a build fails.
-* Improved the GCC detection routines and added a more helpful error
-  message for Xcode 4.2 users.
-* JRuby installation no longer requires the install prefix to exist
-  first.
-* You can now pass `$CONFIGURE_OPTS` to the REE definitions.
-* Added a JRuby 1.6.5 definition.
-* Added a Ruby 1.9.2-p180 definition.
-* Added a Ruby 1.9.3-p0 definition.
-
-#### 20110928
-
-* ruby-build now uses the `--with-gcc` configure flag on OS X Lion.
-* Added definitions for REE 1.8.7-2010.02 and 1.8.6-2009.06.
-* Modified `rbenv-install` to run `rbenv rehash` after installation.
-* Added a Ruby 1.9.3-rc1 definition.
-* Updated the JRuby defintions to install the `jruby-launcher` gem.
-* Updated the rbx-2.0.0 definition to point to the master branch.
-* Added a jruby-1.7.0-dev definition.
-* Added a Ruby 1.9.4-dev definition.
-
-#### 20110914
-
-* Added an rbx-2.0.0-dev definition for Rubinius 2.0.0 from git.
-* Added support for setting `./configure` options with the
-  `CONFIGURE_OPTS` environment variable.
-* Added a 1.9.3-dev definition for Ruby 1.9.3 from Git.
-* Added support for fetching package sources via Git.
-* Added an `rbenv-install` script which provides an `install` command
-  for rbenv users.
-
-#### 20110906.1
-
-* Changed the REE definition not to install its default gem
-  collection.
-* Reverted a poorly-tested change that intended to enable support for
-  relative installation paths.
-
-#### 20110906
-
- * Initial public release.
+* Began fork from [ruby-build](https://github.com/sstephenson/ruby-build)
+* Added definitions for 2.14.0 and 2.14.1.
 
 ### License
 
 (The MIT License)
 
 Copyright (c) 2011 Sam Stephenson
+Copyright (c) 2012 Vanderbilt University
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
