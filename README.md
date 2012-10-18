@@ -129,6 +129,20 @@ include the full build log for build failures.
 
 ## Version History
 
+R-build is a forked version of [ruby-build](https://github.com/sstephenson/ruby-build).
+
+#### 20121003
+
+* Add definition for R-2.15.1
+
+#### 20120405
+
+* Add definition for R-2.15.0
+
+#### 20120302
+
+* Add definition for R-2.14.2
+
 #### 20120106
 
 * Began fork from [R-build](https://github.com/viking/R-build)
