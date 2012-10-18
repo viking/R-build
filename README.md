@@ -118,11 +118,7 @@ command. You should specify the location of the source code with the
 
 ## Getting Help
 
-Please see the [R-build
-wiki](https://github.com/viking/R-build/wiki) for solutions to
-common problems.
-
-If you can't find an answer on the wiki, open an issue on the [issue
+Open an issue on the [issue
 tracker](https://github.com/viking/R-build/issues). Be sure to
 include the full build log for build failures.
 
