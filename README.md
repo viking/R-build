@@ -127,6 +127,11 @@ include the full build log for build failures.
 
 R-build is a forked version of [ruby-build](https://github.com/sstephenson/ruby-build).
 
+#### 20121102
+
+* Add definition for R-2.15.2
+* Fix merging errors
+
 #### 20121003
 
 * Add definition for R-2.15.1

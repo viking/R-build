@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-<<<<<<< HEAD:bin/R-build
-R_BUILD_VERSION="20120106"
-=======
-RUBY_BUILD_VERSION="20120815"
->>>>>>> upstream/master:bin/ruby-build
+R_BUILD_VERSION="20120815"
 
 set -E
 exec 3<&2 # preserve original stderr at fd 3
@@ -96,8 +92,6 @@ install_package() {
   install_package_using "tarball" 1 $*
 }
 
-<<<<<<< HEAD:bin/R-build
-=======
 install_git() {
   install_package_using "git" 2 $*
 }
@@ -106,7 +100,6 @@ install_svn() {
   install_package_using "svn" 2 $*
 }
 
->>>>>>> upstream/master:bin/ruby-build
 install_package_using() {
   local package_type="$1"
   local package_type_nargs="$2"
@@ -154,8 +147,6 @@ fetch_tarball() {
   } >&4 2>&1
 }
 
-<<<<<<< HEAD:bin/R-build
-=======
 fetch_git() {
   local package_name="$1"
   local git_url="$2"
@@ -186,7 +177,6 @@ fetch_svn() {
   fi
 }
 
->>>>>>> upstream/master:bin/ruby-build
 build_package() {
   local package_name="$1"
   shift
@@ -238,7 +228,7 @@ require_gcc() {
   if [ -z "$gcc" ]; then
     local esc=$'\033'
     { echo
-      echo "${esc}[1mERROR${esc}[0m: This package must be compiled with GCC, but ruby-build couldn't"
+      echo "${esc}[1mERROR${esc}[0m: This package must be compiled with GCC, but R-build couldn't"
       echo "find a suitable \`gcc\` executable on your system. Please install GCC"
       echo "and try again."
       echo
@@ -249,17 +239,14 @@ require_gcc() {
         echo "\`llvm-gcc\`, a modified version of GCC which outputs LLVM bytecode."
         echo
         echo "For most programs the \`llvm-gcc\` compiler works fine. However,"
-        echo "versions of Ruby older than 1.9.3-p125 are incompatible with"
-        echo "\`llvm-gcc\`. To build older versions of Ruby you must have the official"
-        echo "GCC compiler installed on your system."
+        echo "if you experience problems, you should install the offical GCC compiler."
         echo
         echo "${esc}[1mTO FIX THE PROBLEM${esc}[0m: Install the official GCC compiler using these"
         echo "packages: ${esc}[4mhttps://github.com/kennethreitz/osx-gcc-installer/downloads${esc}[0m"
         echo
-        echo "You will need to install the official GCC compiler to build older"
-        echo "versions of Ruby even if you have installed Apple's Command Line Tools"
-        echo "for Xcode package. The Command Line Tools for Xcode package only"
-        echo "includes \`llvm-gcc\`."
+        echo "You may need to install the official GCC compiler even if you have installed"
+        echo "Apple's Command Line Tools for Xcode package. The Command Line Tools for Xcode package"
+        echo "only includes \`llvm-gcc\`."
       fi
     } >&3
     return 1
@@ -322,13 +309,8 @@ version() {
 
 usage() {
   { version
-<<<<<<< HEAD:bin/R-build
-    echo "usage: R-build [-v|--verbose] definition prefix"
+    echo "usage: R-build [-k|--keep] [-v|--verbose] definition prefix"
     echo "       R-build --definitions"
-=======
-    echo "usage: ruby-build [-k|--keep] [-v|--verbose] definition prefix"
-    echo "       ruby-build --definitions"
->>>>>>> upstream/master:bin/ruby-build
   } >&2
 
   if [ -z "$1" ]; then
@@ -346,12 +328,8 @@ list_definitions() {
 
 
 unset VERBOSE
-<<<<<<< HEAD:bin/R-build
-R_BUILD_ROOT="$(abs_dirname "$0")/.."
-=======
 unset KEEP_BUILD_PATH
-RUBY_BUILD_ROOT="$(abs_dirname "$0")/.."
->>>>>>> upstream/master:bin/ruby-build
+R_BUILD_ROOT="$(abs_dirname "$0")/.."
 
 parse_options "$@"
 
@@ -409,19 +387,14 @@ else
 fi
 
 SEED="$(date "+%Y%m%d%H%M%S").$$"
-<<<<<<< HEAD:bin/R-build
 LOG_PATH="${TMP}/R-build.${SEED}.log"
-TEMP_PATH="${TMP}/R-build.${SEED}"
-=======
-LOG_PATH="${TMP}/ruby-build.${SEED}.log"
-RUBY_BIN="${PREFIX_PATH}/bin/ruby"
->>>>>>> upstream/master:bin/ruby-build
+R_BIN="${PREFIX_PATH}/bin/R"
 CWD="$(pwd)"
 
-if [ -z $RUBY_BUILD_BUILD_PATH ]; then
-  BUILD_PATH="${TMP}/ruby-build.${SEED}"
+if [ -z $R_BUILD_BUILD_PATH ]; then
+  BUILD_PATH="${TMP}/R-build.${SEED}"
 else
-  BUILD_PATH=$RUBY_BUILD_BUILD_PATH
+  BUILD_PATH=$R_BUILD_BUILD_PATH
 fi
 
 exec 4<> "$LOG_PATH" # open the log file at fd 4
