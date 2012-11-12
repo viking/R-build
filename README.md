@@ -50,7 +50,7 @@ your cloned copy of the repository, then re-run the install script.
 To install a R version for use with Renv, run `Renv install` with
 the exact name of the version you want to install. For example,
 
-    $ Renv install 1.9.3-p194
+    $ Renv install 2.15.2
 
 R versions will be installed into a directory of the same name
 under `~/.Renv/versions`.
@@ -69,7 +69,7 @@ Run the `R-build` command with the exact name of the version you
 want to install and the full path where you want to install it. For
 example,
 
-    $ R-build 1.9.3-p194 ~/local/R-1.9.3-p194
+    $ R-build 2.15.2 ~/local/R-2.15.2
 
 To see a list of all available R versions, run `R-build
 --definitions`.
