@@ -255,6 +255,23 @@ require_gcc() {
   export CC="$gcc"
 }
 
+require_rsync() {
+  local rsync="$(locate_rsync || true)"
+
+  if [ -z "$rsync" ]; then
+    local esc=$'\033'
+    { echo
+      echo "${esc}[1mERROR${esc}[0m: This package needs rsync, but R-build couldn't"
+      echo "find a suitable \`rsync\` executable on your system. Please install rsync"
+      echo "and try again."
+      echo
+    } >&3
+    return 1
+  fi
+
+  export RSYNC="$rsync"
+}
+
 locate_gcc() {
   local gcc gccs
   IFS=: gccs=($(gccs_in_path))
@@ -263,6 +280,20 @@ locate_gcc() {
   verify_gcc "$(command -v gcc || true)" || {
     for gcc in "${gccs[@]}"; do
       verify_gcc "$gcc" && break || true
+    done
+  }
+
+  return 1
+}
+
+locate_rsync() {
+  local rsync rsyncs
+  IFS=: rsyncs=($(rsyncs_in_path))
+
+  verify_rsync "$RSYNC" ||
+  verify_rsync "$(command -v rsync || true)" || {
+    for rsync in "${rsyncs[@]}"; do
+      verify_rsync "$rsync" && break || true
     done
   }
 
@@ -285,6 +316,22 @@ gccs_in_path() {
   printf :%s "${gccs[@]}"
 }
 
+rsyncs_in_path() {
+  local rsync path paths
+  local rsyncs=()
+  IFS=: paths=($PATH)
+
+  shopt -s nullglob
+  for path in "${paths[@]}"; do
+    for rsync in "$path"/rsync*; do
+      rsyncs["${#rsyncs[@]}"]="$rsync"
+    done
+  done
+  shopt -u nullglob
+
+  printf :%s "${rsyncs[@]}"
+}
+
 verify_gcc() {
   local gcc="$1"
   if [ -z "$gcc" ]; then
@@ -301,6 +348,20 @@ verify_gcc() {
   fi
 
   echo "$gcc"
+}
+
+verify_rsync() {
+  local rsync="$1"
+  if [ -z "$rsync" ]; then
+    return 1
+  fi
+
+  local version="$("$rsync" --version || true)"
+  if [ -z "$version" ]; then
+    return 1
+  fi
+
+  echo "$rsync"
 }
 
 version() {
