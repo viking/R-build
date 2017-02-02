@@ -52,8 +52,13 @@ the exact name of the version you want to install. For example,
 
     $ Renv install 2.15.2
 
-R versions will be installed into a directory of the same name
-under `~/.Renv/versions`.
+installs R version 2.15.2 to `~/.Renv/versions/2.15.2`. Provide an
+additional argument to install to a directory with a name that differs
+from the version number. For example,
+
+    $ Renv install 2.15.2 my-proj
+
+installs R version 2.15.2 to `~/.Renv/versions/my-proj`.
 
 To see a list of all available R versions, run `Renv install`
 without any arguments. You may also tab-complete available R
