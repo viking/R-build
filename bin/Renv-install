@@ -15,7 +15,7 @@ fi
 eval "$(R-build --lib)"
 
 usage() {
-  { echo "usage: Renv install [-k|--keep] [-v|--verbose] VERSION"
+  { echo "usage: Renv install [-k|--keep] [-v|--verbose] VERSION [VERSION_NAME]"
     echo "       Renv install [-k|--keep] [-v|--verbose] /path/to/definition"
     echo "       Renv install -l|--list"
     echo
@@ -61,11 +61,15 @@ done
 DEFINITION="${ARGUMENTS[0]}"
 [ -n "$DEFINITION" ] || usage 1
 
+VERSION_NAME="${ARGUMENTS[1]}"
+
 for script in $(Renv-hooks install); do
   source "$script"
 done
 
-VERSION_NAME="${DEFINITION##*/}"
+if [ -z "$VERSION_NAME" ]; then
+    VERSION_NAME="${DEFINITION##*/}"
+fi
 PREFIX="${RENV_ROOT}/versions/${VERSION_NAME}"
 
 # If RENV_BUILD_ROOT is set, then always pass keep options to R-build
