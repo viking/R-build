@@ -464,8 +464,6 @@ if [ -n "$VERBOSE" ]; then
   trap "kill 0" SIGINT SIGTERM EXIT
 fi
 
-export LDFLAGS="-L'${PREFIX_PATH}/lib' ${LDFLAGS}"
-export CPPFLAGS="-I'${PREFIX_PATH}/include' ${CPPFLAGS}"
 CONFIGURE_ARGS="--enable-R-shlib ${CONFIGURE_ARGS}"
 
 trap build_failed ERR
