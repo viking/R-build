@@ -15,13 +15,14 @@ fi
 eval "$(R-build --lib)"
 
 usage() {
-  { echo "usage: Renv install [-k|--keep] [-v|--verbose] VERSION [VERSION_NAME]"
-    echo "       Renv install [-k|--keep] [-v|--verbose] /path/to/definition"
+  { echo "usage: Renv install [-k|--keep] [-v|--verbose] [-d|--debug] VERSION [VERSION_NAME]"
+    echo "       Renv install [-k|--keep] [-v|--verbose] [-d|--debug] /path/to/definition"
     echo "       Renv install -l|--list"
     echo
     echo "  -l/--list        List all available versions"
     echo "  -k/--keep        Keep source tree in \$RENV_BUILD_ROOT after installation"
     echo "                   (defaults to ${RENV_ROOT}/sources)"
+    echo "  -d/--debug       Use debugging compilation flags"
     echo "  -v/--verbose     Verbose mode: print compilation status to stdout"
     echo
   } >&2
@@ -31,6 +32,7 @@ usage() {
 
 unset KEEP
 unset VERBOSE
+unset DEBUG
 
 parse_options "$@"
 for option in "${OPTIONS[@]}"; do
@@ -48,6 +50,9 @@ for option in "${OPTIONS[@]}"; do
     ;;
   "v" | "verbose" )
     VERBOSE="-v"
+    ;;
+  "d" | "debug" )
+    DEBUG="-d"
     ;;
   "version" )
     exec R-build --version
@@ -69,7 +74,11 @@ done
 
 if [ -z "$VERSION_NAME" ]; then
     VERSION_NAME="${DEFINITION##*/}"
+    if [ -n "$DEBUG" ]; then
+        VERSION_NAME="${VERSION_NAME}-dbg"
+    fi
 fi
+
 PREFIX="${RENV_ROOT}/versions/${VERSION_NAME}"
 
 # If RENV_BUILD_ROOT is set, then always pass keep options to R-build
@@ -78,5 +87,5 @@ if [ -n "${RENV_BUILD_ROOT}" ]; then
   KEEP="-k"
 fi
 
-R-build $KEEP $VERBOSE "$DEFINITION" "$PREFIX"
+R-build $KEEP $VERBOSE $DEBUG "$DEFINITION" "$PREFIX"
 Renv rehash

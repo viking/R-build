@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-R_BUILD_VERSION="20120815"
+R_BUILD_VERSION="20180620"
 
 set -E
 exec 3<&2 # preserve original stderr at fd 3
@@ -370,7 +370,7 @@ version() {
 
 usage() {
   { version
-    echo "usage: R-build [-k|--keep] [-v|--verbose] definition prefix"
+    echo "usage: R-build [-k|--keep] [-v|--verbose] [-d|--debug] definition prefix"
     echo "       R-build --definitions"
   } >&2
 
@@ -389,6 +389,7 @@ list_definitions() {
 
 
 unset VERBOSE
+unset DEBUG
 unset KEEP_BUILD_PATH
 R_BUILD_ROOT="$(abs_dirname "$0")/.."
 
@@ -401,6 +402,7 @@ for option in "${OPTIONS[@]}"; do
     { echo
       echo "  -k/--keep        Do not remove source tree after installation"
       echo "  -v/--verbose     Verbose mode: print compilation status to stdout"
+      echo "  -d/--debug       Build with debugging compilation flags"
       echo "  --definitions    List all built-in definitions"
       echo
     } >&2
@@ -415,6 +417,9 @@ for option in "${OPTIONS[@]}"; do
     ;;
   "v" | "verbose" )
     VERBOSE=true
+    ;;
+  "d" | "debug" )
+    DEBUG=true
     ;;
   "version" )
     version
@@ -464,6 +469,12 @@ if [ -n "$VERBOSE" ]; then
   trap "kill 0" SIGINT SIGTERM EXIT
 fi
 
+if [ -n "$DEBUG" ]; then
+  export CFLAGS="-g3"
+  export FFLAGS="-g3"
+  export FCFLAGS="-g3"
+  export CXXFLAGS="-g3"
+fi
 export LDFLAGS="-L'${PREFIX_PATH}/lib' ${LDFLAGS}"
 export CPPFLAGS="-I'${PREFIX_PATH}/include' ${CPPFLAGS}"
 CONFIGURE_ARGS="--enable-R-shlib ${CONFIGURE_ARGS}"
