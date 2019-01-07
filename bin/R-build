@@ -470,10 +470,10 @@ if [ -n "$VERBOSE" ]; then
 fi
 
 if [ -n "$DEBUG" ]; then
-  export CFLAGS="-g3"
-  export FFLAGS="-g3"
-  export FCFLAGS="-g3"
-  export CXXFLAGS="-g3"
+  export CFLAGS="-g3 -Wall"
+  export FFLAGS="-g3 -Wall"
+  export FCFLAGS="-g3 -Wall"
+  export CXXFLAGS="-g3 -Wall"
 fi
 export LDFLAGS="-L'${PREFIX_PATH}/lib' ${LDFLAGS}"
 export CPPFLAGS="-I'${PREFIX_PATH}/include' ${CPPFLAGS}"
