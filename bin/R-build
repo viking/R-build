@@ -474,10 +474,11 @@ if [ -n "$DEBUG" ]; then
   export FFLAGS="-g3 -Wall"
   export FCFLAGS="-g3 -Wall"
   export CXXFLAGS="-g3 -Wall"
+  CONFIGURE_OPTS="--enable-memory-profiling ${CONFIGURE_OPTS}"
 fi
 export LDFLAGS="-L'${PREFIX_PATH}/lib' ${LDFLAGS}"
 export CPPFLAGS="-I'${PREFIX_PATH}/include' ${CPPFLAGS}"
-CONFIGURE_ARGS="--enable-R-shlib ${CONFIGURE_ARGS}"
+CONFIGURE_OPTS="--enable-R-shlib ${CONFIGURE_OPTS}"
 
 trap build_failed ERR
 mkdir -p "$BUILD_PATH"
