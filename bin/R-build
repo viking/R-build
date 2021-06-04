@@ -478,7 +478,6 @@ if [ -n "$DEBUG" ]; then
 fi
 export LDFLAGS="-L'${PREFIX_PATH}/lib' ${LDFLAGS}"
 export CPPFLAGS="-I'${PREFIX_PATH}/include' ${CPPFLAGS}"
-CONFIGURE_OPTS="--enable-R-shlib ${CONFIGURE_OPTS}"
 
 trap build_failed ERR
 mkdir -p "$BUILD_PATH"
